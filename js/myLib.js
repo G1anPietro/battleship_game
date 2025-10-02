@@ -2,17 +2,20 @@
 var gridSizeX = 5;
 var gridSizeY = 5;
 
+// maximum amont of ammunition, the more grids there are, the higher the ammo
+const maxAmmo = Math.round((gridSizeX * gridSizeY) / 1.52);
 // maximum num of subs, the more grids there are, the higher the subs
 const maxSub = Math.round((gridSizeX * gridSizeY) / 4);
 
+// attempts to choose the cell with the sub
+var userAmmo = maxAmmo;
 // amount of subs left in the grid
 var enemySubLeft = maxSub;
-var userSubLeft = maxSub;
 
 // canges the value of the paragrapsh that contais these info
 function initValues(){
+    document.getElementById("ammo").innerHTML = maxAmmo;
     document.getElementById("subNum").innerHTML = maxSub;
-    document.getElementById("userSubNum").innerHTML = maxSub;
 }
 
 // returns a random number
@@ -26,6 +29,7 @@ function spawnSub(){
     let pos = 0;
     // the sub element
     let sub = document.getElementById(pos);
+
     console.clear();
     console.log("enemy grid:");
 
@@ -45,50 +49,16 @@ function spawnSub(){
     }
     console.log("___________");
 
-    // does the same thig as the loop above but for the enemy table
-    console.log("user grid:");
-    for(let i = 0; i < maxSub; i++){
-        pos = randInt((gridSizeX * gridSizeY)) + 26;
-        console.log(i+": "+pos);
-        sub = document.getElementById(pos);
-        if(sub.className == "sub"){
-            i--;
-        }else{
-            sub.className = "sub";
-        }
-    }
-    console.log("___________");
-
 }
 
-// it's called AI but it's far from intelligent
-function enemyAI(){
-    let pos = randInt(gridSizeX * gridSizeY) + 26;
-    let attVal = document.getElementById(pos);
-    let subNum = document.getElementById("userSubNum");
-
-    while(attVal.alt != "onda"){
-        pos = randInt(gridSizeX * gridSizeY) + 26;
-        attVal = document.getElementById(pos);
-    }
-
-    if(attVal.className == "sub"){
-        attVal.src="img/affondato_2.png";
-        attVal.alt="affondato";
-
-        userSubLeft--;
-        subNum.innerHTML = userSubLeft;
-    }else{
-        attVal.src="img/gabbiano.png";
-        attVal.alt="mancato";
-    }
-}
-
-// canges the photo of the cell if the image has the "sub" class it subtracts to the subsLeft variable and when the
-// user find all the subs or he loses can no longer click on the images and the 
+// canges the photo of the cell, subtracts the ammo for each click of the image and if the
+// if the image has the "sub" class it subtracts to the subsLeft variable and when the
+// user find all the subs or finishes the ammo he can no longer click on the images and the 
 // paragraph on the top of the page says if he won or not
 
 function shoot(pos){
+    // so i can change the paragraph were the amount of ammo is shown
+    let magazine = document.getElementById("ammo");
     // so i can change the paragraph were the amount of suds left is shown
     let subNum = document.getElementById("subNum");
     // so i can change the src attribute value to anoter image (it stands for ATTribute VALue)
@@ -97,10 +67,10 @@ function shoot(pos){
     let win = document.getElementById("win");
 
     // the image changes only if:
-    // 1) the user didn't lost/won yet
+    // 1) the user has enough ammo
     // 2) ther are subs left in the enemy grid
     // 3) the image was not already clicked
-    if((enemySubLeft > 0) && (attVal.alt != "affondato") && (attVal.alt != "mancato")){
+    if((userAmmo > 0) && (enemySubLeft > 0) && (attVal.alt != "affondato") && (attVal.alt != "mancato")){
         // if there is a sub the image is changed to a "drowning" submarine
         // and the value of subs is decrased from the paragraph
         if(attVal.className == "sub"){
@@ -114,24 +84,24 @@ function shoot(pos){
             attVal.src="img/gabbiano.png";
             attVal.alt="mancato";
         }
-        enemyAI();
+
+        userAmmo--;
+        magazine.innerHTML=userAmmo;
     }
-    
     
     // changes the text if the user won or lost
-    if((enemySubLeft > 0) && (userSubLeft == 0)){
+    if((userAmmo == 0) && (enemySubLeft > 0)){
         win.innerHTML="HAI PERSO";
     }
-    if((enemySubLeft == 0) && (userSubLeft > 0)){
+    if((userAmmo > 0) && (enemySubLeft == 0)){
         win.innerHTML="HAI VINTO";
     }
-    
 }
 
 // resets a bunch of values to it's original state and spawns subs
 function resetGame(){
-    enemySubLeft = maxSub;
-    userSubLeft = maxSub;
+    userAmmo = maxAmmo
+    enemySubLeft = maxSub
     document.getElementById("win").innerHTML='';
     initValues();
     let element;
@@ -146,12 +116,6 @@ function resetGame(){
         // very useful comand \/ \/ \/
         //element.setAttribute("onclick", 'shoot('+i+')');
     }
-    for(let i = gridSizeX * gridSizeY + 1; i < 2*(gridSizeX * gridSizeY) + 1; i++){
-        element = document.getElementById(i);
-        element.src="img/onda.png";
-        element.alt="onda";
-        element.className = "onda";
-    }
     spawnSub();
 }
 
@@ -160,10 +124,8 @@ function resetGame(){
 // of the tables, so i can have the amount of rows and columns on the fly
 function createMap(){
     let enemyMap = document.getElementById("enemyMap");
-    let userMap = document.getElementById("userMap");
     let f = 1;
     let insideEnemyMap = "";
-    let insideYourMap = "";
 
     for(let i = 1; i < (gridSizeY + 1); i++){
         insideEnemyMap += "\n<tr>\n";
@@ -173,15 +135,6 @@ function createMap(){
         }
         insideEnemyMap += "</tr>";
     }
-    for(let i = gridSizeY + 2; i < 2*(gridSizeY + 1); i++){
-        insideYourMap += "\n<tr>\n";
-        for(let j = 0; j < gridSizeX; j++){
-            insideYourMap += "<td><img id="+f+"></td>\n"
-            f++
-        }
-        insideYourMap += "</tr>";
-    }
 
     enemyMap.innerHTML = insideEnemyMap;
-    userMap.innerHTML = insideYourMap;
 }
