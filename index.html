@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>battaglia navale</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/myLib.js"></script>
+    </head>
+    <body onload="createMap(); resetGame();">
+        
+        <h1>
+            <span style="color: purple;">Battaglia</span>
+            <br>
+            <span style="color: green;">Navale</span>
+            <br>
+            <span id="win"></span>
+        </h1>
+
+        <div class="flexDisplay">
+            <div>
+                <p style="color: blue;">la tua griglia</p>
+                <table id="userMap"></table>
+            </div>
+            <div>
+                <p style="color: red;">la griglia del nemico</p>
+                <table id="enemyMap"></table>
+                <p style="color: red;">le navi vive avversarie: <span id="subNum"></span></p>
+                <p style="color: blue;">hai <span id="ammo"></span> colpi</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button onclick="resetGame()">arrenditi</button>
+        </div>
+        
+
+    </body>
+</html>
