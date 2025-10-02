@@ -14,21 +14,20 @@
             <br>
             <span id="win"></span>
         </h1>
-
+            
         <div class="flexDisplay">
-            <div>
-                <p style="color: blue;">la tua griglia</p>
-                <table id="userMap"></table>
-                <p style="color: blue;">i tuoi sottomarini: <span id="userSubNum"></span></p>
-                <p style="color: blue;">hai <span id="ammo"></span> colpi</p>                
-            </div>
-            <div>
-                <p style="color: red;">la griglia del nemico</p>
-                <table id="enemyMap"></table>
-                <p style="color: red;">i sottomarini avversari: <span id="subNum"></span></p>
-                <p style="color: red;">l'avversario ha <span id="enemyAmmo"></span> colpi</p>
-            </div>
+            <button onclick="gridSize(5)">5x5</button>
+            <button onclick="gridSize(6)">6x6</button>
+            <button onclick="gridSize(7)">7x7</button>
+            <button onclick="gridSize(8)">8x8</button>
+            <button onclick="gridSize(9)">9x9</button>
+            <button onclick="gridSize(10)">10x10</button>
         </div>
+
+        <p style="color: red;">la griglia del nemico</p>
+        <table id="enemyMap"></table>
+        <p style="color: red;">i sottomarini avversari: <span id="subNum"></span></p>
+        <p style="color: blue;">hai <span id="ammo"></span> colpi</p>
         
         <div style="text-align: center;">
             <button onclick="resetGame()">arrenditi</button>

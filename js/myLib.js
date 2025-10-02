@@ -3,7 +3,7 @@ var gridSizeX = 5;
 var gridSizeY = 5;
 
 // maximum num of subs, the more grids there are, the higher the subs
-const maxSub = Math.round((gridSizeX * gridSizeY) / 4);
+var maxSub = Math.round((gridSizeX * gridSizeY) / 4);
 
 // amount of subs left in the grid
 var enemySubLeft = maxSub;
@@ -13,6 +13,15 @@ var userSubLeft = maxSub;
 function initValues(){
     document.getElementById("subNum").innerHTML = maxSub;
     document.getElementById("userSubNum").innerHTML = maxSub;
+}
+
+function gridSize(num){
+    gridSizeX = num;
+    gridSizeY = num;
+    maxSub = Math.round((gridSizeX * gridSizeY) / 4);
+    createMap();
+    resetGame();
+    initValues();
 }
 
 // returns a random number
@@ -32,7 +41,7 @@ function spawnSub(){
     // it loops until all the subs are spawned on the grid
     for(let i = 0; i < maxSub; i++){
         // position of the sub
-        pos = randInt(gridSizeX * gridSizeY) + 1;
+        pos = randInt((gridSizeX * gridSizeY)) + 1;
         console.log(i+": "+pos);
         sub = document.getElementById(pos);
         // if there is alredy a sub there it just repeats the cycle
@@ -48,7 +57,7 @@ function spawnSub(){
     // does the same thig as the loop above but for the enemy table
     console.log("user grid:");
     for(let i = 0; i < maxSub; i++){
-        pos = randInt((gridSizeX * gridSizeY)) + 26;
+        pos = randInt((gridSizeX * gridSizeY)) + (gridSizeX * gridSizeY) + 1;
         console.log(i+": "+pos);
         sub = document.getElementById(pos);
         if(sub.className == "sub"){
@@ -67,14 +76,14 @@ function spawnSub(){
 function enemyAI(){
     // these variable hold the same purpose as the
     // same ones in other functions
-    let pos = randInt(gridSizeX * gridSizeY) + 26;
+    let pos = randInt((gridSizeX * gridSizeY)) + (gridSizeX * gridSizeY) + 1;
     let attVal = document.getElementById(pos);
     let subNum = document.getElementById("userSubNum");
 
     // it searches for unclicked cells and sets the pos
     // and attVal to that
     while(attVal.alt != "onda"){
-        pos = randInt(gridSizeX * gridSizeY) + 26;
+        pos = randInt((gridSizeX * gridSizeY)) + (gridSizeX * gridSizeY) + 1;
         attVal = document.getElementById(pos);
     }
 
@@ -107,7 +116,7 @@ function shoot(pos){
     // 1) the user didn't lost/won yet
     // 2) ther are subs left in the enemy grid
     // 3) the image was not already clicked
-    if((enemySubLeft > 0) && (attVal.alt != "affondato") && (attVal.alt != "mancato")){
+    if((enemySubLeft > 0) && (userSubLeft > 0) &&(attVal.alt != "affondato") && (attVal.alt != "mancato")){
         // if there is a sub the image is changed to a "drowning" submarine
         // and the value of subs is decrased from the paragraph
         if(attVal.className == "sub"){
@@ -131,6 +140,9 @@ function shoot(pos){
     }
     if((enemySubLeft == 0) && (userSubLeft > 0)){
         win.innerHTML="HAI VINTO";
+    }
+    if((enemySubLeft == 0) && (userSubLeft == 0)){
+        win.innerHTML="PAREGGIO";
     }
     
 }

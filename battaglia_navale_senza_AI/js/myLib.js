@@ -3,21 +3,29 @@ var gridSizeX = 5;
 var gridSizeY = 5;
 
 // maximum amont of ammunition, the more grids there are, the higher the ammo
-const maxAmmo = Math.round((gridSizeX * gridSizeY) / 1.52);
+var maxAmmo = Math.round((gridSizeX * gridSizeY) / 1.5);
 // maximum num of subs, the more grids there are, the higher the subs
-const maxSub = Math.round((gridSizeX * gridSizeY) / 4);
+var maxSub = Math.round((gridSizeX * gridSizeY) / 4);
 
 // attempts to choose the cell with the sub
 var userAmmo = maxAmmo;
-var enemyAmmo = maxAmmo;
 // amount of subs left in the grid
 var enemySubLeft = maxSub;
-var userSubLeft = maxSub;
 
 // canges the value of the paragrapsh that contais these info
 function initValues(){
     document.getElementById("ammo").innerHTML = maxAmmo;
     document.getElementById("subNum").innerHTML = maxSub;
+}
+
+function gridSize(num){
+    gridSizeX = num;
+    gridSizeY = num;
+    maxSub = Math.round((gridSizeX * gridSizeY) / 4);
+    maxAmmo = Math.round((gridSizeX * gridSizeY) / 1.5);
+    createMap();
+    resetGame();
+    initValues();
 }
 
 // returns a random number
@@ -31,6 +39,8 @@ function spawnSub(){
     let pos = 0;
     // the sub element
     let sub = document.getElementById(pos);
+
+    console.clear();
     console.log("enemy grid:");
 
     // it loops until all the subs are spawned on the grid
@@ -48,41 +58,6 @@ function spawnSub(){
         }
     }
     console.log("___________");
-
-    // does the same thig as the loop above but for the enemy table
-    console.log("user grid:");
-    for(let i = 0; i < maxSub; i++){
-        pos = randInt(2*(gridSizeX * gridSizeY)) + 1;
-        console.log(i+": "+pos);
-        sub = document.getElementById(pos);
-        if(sub.className == "sub"){
-            i--;
-        }else{
-            sub.className = "sub";
-        }
-    }
-    console.log("___________");
-
-}
-
-// it's called AI but it's far from intelligent
-function enemyAI(){
-    let pos = 0;
-    let element = document.getElementById(pos);
-    let subNum = document
-
-    while(element.alt != "onde"){
-        pos = randInt(gridSizeX + gridSizeY) + 1;
-        element = document.getElementById(pos);
-    }
-
-    if(element.className == "sub"){
-        attVal.src="img/affondato_2.png";
-        attVal.alt="affondato";
-
-        userSubLeft--;
-        subNum.innerHTML= userSubLeft;
-    }
 
 }
 
@@ -125,10 +100,10 @@ function shoot(pos){
     }
     
     // changes the text if the user won or lost
-    if((userAmmo < 1) && (enemySubLeft > 0)){
+    if((userAmmo == 0) && (enemySubLeft > 0)){
         win.innerHTML="HAI PERSO";
     }
-    if((userAmmo > 0) && (enemySubLeft < 1)){
+    if((userAmmo > 0) && (enemySubLeft == 0)){
         win.innerHTML="HAI VINTO";
     }
 }
@@ -151,13 +126,6 @@ function resetGame(){
         // very useful comand \/ \/ \/
         //element.setAttribute("onclick", 'shoot('+i+')');
     }
-    for(let i = gridSizeX * gridSizeY + 1; i < 2*(gridSizeX * gridSizeY) + 1; i++){
-        element = document.getElementById(i);
-        element.src="img/onda.png";
-        element.alt="onda";
-        element.className = "enemyCell";
-        element.className = "onda";
-    }
     spawnSub();
 }
 
@@ -166,10 +134,8 @@ function resetGame(){
 // of the tables, so i can have the amount of rows and columns on the fly
 function createMap(){
     let enemyMap = document.getElementById("enemyMap");
-    let userMap = document.getElementById("userMap");
     let f = 1;
     let insideEnemyMap = "";
-    let insideYourMap = "";
 
     for(let i = 1; i < (gridSizeY + 1); i++){
         insideEnemyMap += "\n<tr>\n";
@@ -179,15 +145,6 @@ function createMap(){
         }
         insideEnemyMap += "</tr>";
     }
-    for(let i = gridSizeY + 2; i < 2*(gridSizeY + 1); i++){
-        insideYourMap += "\n<tr>\n";
-        for(let j = 0; j < gridSizeX; j++){
-            insideYourMap += "<td><img id="+f+"></td>\n"
-            f++
-        }
-        insideYourMap += "</tr>";
-    }
 
     enemyMap.innerHTML = insideEnemyMap;
-    userMap.innerHTML = insideYourMap;
 }
